@@ -5,29 +5,16 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.1</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <version>2.7.5</version>
+        <relativePath/>
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>image-service</artifactId>
+    <artifactId>Image-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>image-service</name>
     <description>image-service</description>
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
     <properties>
-        <java.version>21</java.version>
+        <java.version>11</java.version>
     </properties>
     <dependencies>
         <dependency>
@@ -36,21 +23,16 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
 
         <dependency>
             <groupId>io.minio</groupId>
             <artifactId>minio</artifactId>
-            <version>8.5.11</version>
+            <version>8.5.1</version>
         </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
+
     </dependencies>
 
     <build>
@@ -58,6 +40,11 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
             </plugin>
         </plugins>
     </build>
