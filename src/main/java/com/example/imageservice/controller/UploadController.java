@@ -9,6 +9,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("upload")
+@CrossOrigin
 public class UploadController {
     @Autowired
     private MinIOService minioService;
