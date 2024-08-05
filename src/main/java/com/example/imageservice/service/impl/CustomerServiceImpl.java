@@ -15,6 +15,7 @@ import com.example.imageservice.service.MinIOService;
 import com.example.imageservice.service.UserService;
 import com.example.imageservice.util.ContextUtil;
 import com.example.imageservice.util.DateUtil;
+import com.example.imageservice.util.ObjectMapperUtils;
 import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.Node;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,8 +78,17 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer> implements Cu
     @Override
     public Customer create(Customer t) throws Exception {
         t.setStatus(Status.ACTIVE);
+        t.setIsActive(1);
         t.setCreateDate(DateUtil.getCurrenDateTime());
-        t.setUser(userService.getUserByUsername(contextUtil.getUserName()));
+//        t.setUser(userService.getUserByUsername(contextUtil.getUserName()));
         return this.getRepository().save(t);
+    }
+
+    @Override
+    public Customer update(Customer t) throws Exception {
+        Customer entityMy = this.getById(t.getId());
+        ObjectMapperUtils.map(t, entityMy);
+        t.setUpdateDate(DateUtil.getCurrenDateTime());
+        return getRepository().save(entityMy);
     }
 }

@@ -56,8 +56,9 @@ public abstract class BaseServiceImpl<T extends BaseEntity> implements BaseServi
 
     @Override
     public T create(T t) throws Exception {
-        t.setStatus(Status.ACTIVE);
+        t.setStatus(0);
         t.setCreateDate(DateUtil.getCurrenDateTime());
+        t.setIsActive(1);
         return this.getRepository().save(t);
     }
 
@@ -79,7 +80,7 @@ public abstract class BaseServiceImpl<T extends BaseEntity> implements BaseServi
     @Override
     public void delete(Long id) {
         T t = this.getRepository().findAllById(id);
-        t.setStatus(Status.DELETED);
+        t.setIsActive(Status.DELETED);
         this.getRepository().save(t);
     }
 

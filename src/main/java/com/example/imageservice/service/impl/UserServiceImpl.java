@@ -56,7 +56,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             return new BaseResponse(500, "Account không tồn tại", null);
 
         User user = userOptional.get();
-        if (!Objects.equals(user.getStatus(), Status.ACTIVE))
+        if (!Objects.equals(user.getIsActive(), Status.ACTIVE))
             return new BaseResponse(500, "Account đã bị khóa", null);
 
         if (!isValidPassword(user.getPassword(), loginRequest.getPassword())) {
@@ -66,6 +66,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         loginResponse.setToken(jwtTokenProvider.generateToken(user.getUserName()));
         loginResponse.setUserName(user.getUserName());
         loginResponse.setFullName(user.getFullName());
+        loginResponse.setRole(user.getRole());
         loginResponse.setUserId(user.getId());
         return new BaseResponse(200, "OK", loginResponse);
     }
@@ -84,6 +85,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         }
         user.setCreateDate(DateUtil.getCurrenDateTime());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setIsActive(1);
         User result = super.create(user);
         return new BaseResponse().success(result);
     }
