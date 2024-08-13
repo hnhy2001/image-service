@@ -7,6 +7,7 @@ import com.example.imageservice.service.CustomerService;
 import com.example.imageservice.service.ImageService;
 import com.example.imageservice.service.MinIOService;
 import com.example.imageservice.service.UserService;
+import com.example.imageservice.util.DateUtil;
 import io.minio.*;
 import io.minio.errors.MinioException;
 import io.minio.http.Method;
@@ -48,13 +49,13 @@ public class MinIOServiceImpl implements MinIOService {
                 minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
             }
 
-            String forder = customer.getUser().getFullName().replaceAll("","") + "/" + customer.getName().replaceAll("","") + "/" + file.getOriginalFilename();
+            String forder = customer.getUser().getFullName().replaceAll("", "") + "/" + customer.getName().replaceAll("", "") + "_" + DateUtil.getCurrenDateTime() + "/" + file.getOriginalFilename();
             // Upload file lên MinIO
             minioClient.putObject(PutObjectArgs.builder().bucket(bucketName).object(forder).stream(file.getInputStream(), file.getInputStream().available(), -1).contentType("image/jpeg").build());
-            String presignedObjectUrl = minioClient.getPresignedObjectUrl(
-                    GetPresignedObjectUrlArgs.builder().method(Method.GET).bucket(bucketName).object(forder).build()
-            );
-            Image image = Image.builder().url(presignedObjectUrl).customer(customer).build();
+//            String presignedObjectUrl = minioClient.getPresignedObjectUrl(
+//                    GetPresignedObjectUrlArgs.builder().method(Method.GET).bucket(bucketName).object(forder).build()
+//            );
+            Image image = Image.builder().url(forder).customer(customer).build();
             imageService.create(image);
             return "File uploaded successfully: " + file.getOriginalFilename();
         } catch (MinioException | IOException | NoSuchAlgorithmException | InvalidKeyException e) {
@@ -114,5 +115,22 @@ public class MinIOServiceImpl implements MinIOService {
         } catch (Exception e) {
             throw new RuntimeException("Error occurred: " + e);
         }
+    }
+
+    @Override
+    public List<Image> getAllFileWithName(List<Image> req) {
+        req.stream().forEach(e -> {
+            try {
+                String presignedObjectUrl = minioClient.getPresignedObjectUrl(
+                        GetPresignedObjectUrlArgs.builder().method(Method.GET).bucket(bucketName).object(e.getUrl()).build()
+                );
+                e.setUrl(presignedObjectUrl);
+            } catch (MinioException | IOException | NoSuchAlgorithmException | InvalidKeyException ex) {
+                System.err.println("Error occurred: " + ex);
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        return req;
     }
 }

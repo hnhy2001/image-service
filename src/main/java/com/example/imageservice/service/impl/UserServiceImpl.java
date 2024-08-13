@@ -86,6 +86,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         user.setCreateDate(DateUtil.getCurrenDateTime());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setIsActive(1);
+        user.setUser(this.getUserByUsername(contextUtil.getUserName()));
         User result = super.create(user);
         return new BaseResponse().success(result);
     }

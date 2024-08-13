@@ -34,4 +34,8 @@ public class User extends BaseEntity{
 
     @Column(name = "role")
     private String role;
+
+    @ManyToOne
+    @JoinColumn(name = "user")
+    private User user;
 }
